@@ -15,7 +15,7 @@ BANDS = {
 
 # Sampling settings
 fs = 250              # Sampling frequency in Hz
-duration = 30         # Duration (in seconds) of each recording segment
+duration = 10         # Duration (in seconds) of each recording segment
 num_samples = fs * duration  # Total samples to record per segment
 
 # Serial port setup (update COM port)
@@ -93,28 +93,33 @@ try:
         plt.figure(figsize=(12, 6))
         
         # Frequency spectrum plot
-        plt.subplot(2, 1, 1)
-        plt.plot(positive_frequencies, positive_fft_values, color='magenta')
+        # plt.subplot(2, 1, 1)
+        plt.plot(positive_frequencies[:400], positive_fft_values[:400], color='magenta')
         plt.title(f'Frequency Spectrum of EEG Signal (Plot {plot_counter})\nElapsed Time: {elapsed_time:.1f}s')
         plt.xlabel('Frequency (Hz)')
         plt.ylabel('Amplitude')
         plt.grid()
+        plt.show()
 
         # Concentration level plot
-        plt.subplot(2, 1, 2)
-        # For demonstration, we show the concentration level as a horizontal line across the segment
-        plt.plot([0, duration], [concentration_level, concentration_level], label="Concentration Level", color='green')
-        plt.xlabel("Time (s)")
-        plt.ylabel("Concentration Level")
-        plt.title("Concentration Level Over 30 Seconds")
-        plt.legend()
-        plt.grid()
+        # plt.subplot(2, 1, 2)
+        # # For demonstration, we show the concentration level as a horizontal line across the segment
+        # plt.plot([0, duration], [concentration_level, concentration_level], label="Concentration Level", color='green')
+        # plt.xlabel("Time (s)")
+        # plt.ylabel("Concentration Level")
+        # plt.title("Concentration Level Over 30 Seconds")
+        # plt.legend()
+        # plt.grid()
 
         plt.tight_layout()
         filename = f"eeg_plot_{plot_counter}.png"
         plt.savefig(f"test_data/{filename}")
-        plt.close()
+        # plt.close()
         print(f"Saved {filename} | Concentration Level: {concentration_level:.2f}")
+
+        alpha = np.sum(positive_fft_values[80:120])/40
+        beta = np.sum(positive_fft_values[120:300])/180
+        print(f"alpha/beta:{alpha/beta}")
 
         # 5-second countdown before next recording segment
         for sec in range(5, 0, -1):
